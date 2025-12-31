@@ -1,0 +1,141 @@
+{
+  "name": "kiro-knowledge-base",
+  "displayName": "Kiro Knowledge Base",
+  "description": "Auto-save and retrieve Kiro conversations to a central knowledge base | 自动保存和检索 Kiro 对话到中央知识库",
+  "version": "2.4.0",
+  "publisher": "DangDangMao",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DangDangMao01/Kiro_work"
+  },
+  "bugs": {
+    "email": "dangdangshijie@gmail.com"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "kiro-kb.setup",
+        "title": "Kiro KB: 设置知识库 / Setup Knowledge Base"
+      },
+      {
+        "command": "kiro-kb.sync",
+        "title": "Kiro KB: 同步到中央仓库 / Sync to Central"
+      },
+      {
+        "command": "kiro-kb.generateIndex",
+        "title": "Kiro KB: 生成索引 / Generate Index"
+      },
+      {
+        "command": "kiro-kb.openKnowledgeBase",
+        "title": "Kiro KB: 打开知识库 / Open Knowledge Base"
+      },
+      {
+        "command": "kiro-kb.toggleErrorReport",
+        "title": "Kiro KB: 切换错误报告 / Toggle Error Report"
+      },
+      {
+        "command": "kiro-kb.saveQuestion",
+        "title": "Kiro KB: 暂存问题 / Save Question"
+      },
+      {
+        "command": "kiro-kb.viewBacklog",
+        "title": "Kiro KB: 查看待办 / View Backlog"
+      },
+      {
+        "command": "kiro-kb.submitBacklog",
+        "title": "Kiro KB: 提交到中央 / Submit to Central"
+      },
+      {
+        "command": "kiro-kb.analyzeBacklog",
+        "title": "Kiro KB: 分析待办问题 / Analyze Backlog"
+      },
+      {
+        "command": "kiro-kb.switchLanguage",
+        "title": "Kiro KB: 切换语言 / Switch Language"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "kiro-kb.saveQuestion",
+        "key": "ctrl+alt+q",
+        "mac": "cmd+alt+q"
+      }
+    ],
+    "configuration": {
+      "title": "Kiro Knowledge Base",
+      "properties": {
+        "kiro-kb.centralPath": {
+          "type": "string",
+          "default": "",
+          "description": "中央知识库路径 / Central knowledge base path"
+        },
+        "kiro-kb.autoSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "自动保存有价值的对话 / Auto-save valuable conversations"
+        },
+        "kiro-kb.autoSync": {
+          "type": "boolean",
+          "default": false,
+          "description": "自动同步模式 / Auto-sync mode (sync without confirmation)"
+        },
+        "kiro-kb.idleReminderMinutes": {
+          "type": "number",
+          "default": 10,
+          "description": "空闲提醒间隔（分钟），0=禁用 / Idle reminder interval (minutes), 0=disable"
+        },
+        "kiro-kb.errorReportEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用错误报告功能 / Enable error reporting"
+        },
+        "kiro-kb.backlogMode": {
+          "type": "string",
+          "enum": ["local", "central", "auto"],
+          "default": "auto",
+          "description": "问题暂存模式 / Backlog mode: local=仅本地 / central=直接中央 / auto=关闭时询问"
+        },
+        "kiro-kb.autoAnalyze": {
+          "type": "string",
+          "enum": ["manual", "onOpen", "never"],
+          "default": "manual",
+          "description": "Kiro自动分析时机 / Auto-analyze timing: manual=手动 / onOpen=打开时询问 / never=从不"
+        },
+        "kiro-kb.language": {
+          "type": "string",
+          "enum": ["zh", "en"],
+          "default": "zh",
+          "description": "界面语言 / UI Language: zh=中文 / en=English"
+        },
+        "kiro-kb.reminderDays": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "default": [7, 30],
+          "description": "中央知识库提醒天数 / Reminder days for central KB [warning, critical]"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "package": "npx @vscode/vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  }
+}

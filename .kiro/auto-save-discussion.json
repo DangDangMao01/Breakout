@@ -1,0 +1,11 @@
+{
+  "name": "自动保存探讨记录",
+  "description": "当对话结束时，自动将探讨内容和解决方案保存到 knowledge-base 文件夹，并添加智能标签",
+  "trigger": {
+    "type": "onAgentComplete"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "请回顾刚才的对话内容，判断是否包含有价值的内容需要保存到知识库。如果有以下类型的内容，请保存到对应目录：\n\n1. **问题探讨/讨论** → 保存到 `knowledge-base/discussions/` 目录\n2. **解决方案/技术方案** → 保存到 `knowledge-base/solutions/` 目录\n3. **学习笔记/知识点** → 保存到 `knowledge-base/notes/` 目录\n\n保存格式要求：\n- 文件名格式：`YYYYMMDD-简短描述.md`\n- 文件头部必须包含 YAML front-matter 标签：\n```yaml\n---\ntags: [关键技术标签]\ndomain: 领域分类(frontend/backend/database/devops/tools/other)\nproject: 项目名称\ndifficulty: 难度(basic/intermediate/advanced)\n---\n```\n- 内容包含：标题、日期、问题背景、核心内容、关键要点\n\n如果对话内容是简单的问答或没有保存价值，则不需要创建文件。"
+  }
+}

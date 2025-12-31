@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "name": "Auto Save Knowledge Base",
+  "description": "When agent stops, remind to save valuable content to knowledge-base",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "sendMessage",
+    "message": "Please review the conversation and save valuable content to knowledge-base if needed."
+  },
+  "workspaceFolderName": "K_Kiro_Work",
+  "shortName": "save-knowledge-base"
+}
