@@ -36,11 +36,10 @@ fn generateRandomPointsInMesh obj count =
 	(
 		attempts += 1
 		-- 在包围盒内生成随机点
-		local testPt = [
-			random minPt.x maxPt.x,
-			random minPt.y maxPt.y,
-			random minPt.z maxPt.z
-		]
+		local rx = random minPt.x maxPt.x
+		local ry = random minPt.y maxPt.y
+		local rz = random minPt.z maxPt.z
+		local testPt = [rx, ry, rz]
 		
 		-- 简化的内部检测：使用多方向射线
 		local inside = true
@@ -68,7 +67,10 @@ fn generateRandomPointsInMesh obj count =
 	(
 		local center = (minPt + maxPt) / 2
 		local offset = (maxPt - minPt) * 0.3
-		append points (center + [random -offset.x offset.x, random -offset.y offset.y, random -offset.z offset.z])
+		local ox = random (-offset.x) offset.x
+		local oy = random (-offset.y) offset.y
+		local oz = random (-offset.z) offset.z
+		append points (center + [ox, oy, oz])
 	)
 	
 	points
