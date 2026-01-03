@@ -1,0 +1,1 @@
+encryptScript"my_script.ms"

@@ -1,0 +1,1 @@
+$Bone002.parent = $Bone001
