@@ -1048,15 +1048,15 @@ rollout SamplifyKeys "简化关键帧" width:200 height:95
 )
 
 -- ==================== 导出工具模块 (增强版) ====================
-rollout ExportTools "导出工具" width:200 height:130
+rollout ExportTools "导出工具" width:200 height:145
 (
-	GroupBox grp1 "FBX设置" pos:[5,5] width:190 height:50
+	GroupBox grp1 "FBX设置" pos:[5,5] width:190 height:70
 	checkbox chkAnim "导出动画" pos:[10,22] checked:true
-	checkbox chkBake "烘焙动画" pos:[85,22] checked:true
-	checkbox chkEmbed "嵌入媒体" pos:[150,22] checked:false
+	checkbox chkBake "烘焙动画" pos:[90,22] checked:true
+	checkbox chkEmbed "嵌入贴图" pos:[10,42] checked:false
 	
-	button btnExportFBX "导出选中为FBX" pos:[10,60] width:180 height:28
-	button btnExportAll "导出全部碎片FBX" pos:[10,92] width:180 height:28
+	button btnExportFBX "导出选中为FBX" pos:[10,80] width:180 height:28
+	button btnExportAll "导出全部碎片FBX" pos:[10,112] width:180 height:28
 	
 	fn configureFBXExport exportAnim bakeAnim embedMedia =
 	(

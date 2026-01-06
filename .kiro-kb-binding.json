@@ -1,9 +1,11 @@
 {
-  "projectId": "92cfceb0-ceb6-4542-9073-ffa140978269",
+  "projectId": "aa0fb09e-98b8-4fa9-8ded-9ba0e254f1a5",
   "projectName": "Kiro-Central-KB",
-  "centralProjectPath": "e:\\Git_file\\Kiro-Central-KB\\projects\\Kiro-Central-KB",
+  "projectType": "other",
+  "centralProjectPath": "d:\\G_GitHub\\Kiro-Central-KB\\projects\\Kiro-Central-KB",
   "autoSync": true,
   "extractComments": true,
-  "lastSync": "2026-01-01T04:29:05.293Z",
-  "defaultSaveLocation": "central"
+  "lastSync": "2026-01-06T02:00:57.027Z",
+  "defaultSaveLocation": "central",
+  "centralSaveMode": "projects"
 }
