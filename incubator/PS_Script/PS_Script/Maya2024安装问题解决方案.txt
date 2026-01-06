@@ -1,0 +1,124 @@
+================================================================================
+                    Maya 2024 安装错误 1603 解决方案
+================================================================================
+
+【问题现象】
+安装 Autodesk Maya 2024 时出现错误：
+- 错误代码：1603
+- 提示：安装无法完成
+
+【根本原因】
+Autodesk Licensing Agent 服务超时（30秒内无法连接），导致许可注册失败。
+日志关键错误信息：
+"timed-out after 30.0 sec(s) waiting for Agent to connect"
+
+【问题分析】
+1. AdskLicensing 服务异常或损坏
+2. VPN 导致无法连接 Autodesk 许可服务器
+3. DNS 解析问题
+
+================================================================================
+                              解决步骤
+================================================================================
+
+【步骤1】关闭 VPN
+- 安装前必须关闭所有 VPN 软件
+- 确保使用正常网络连接
+
+【步骤2】刷新 DNS 缓存
+打开管理员命令提示符，执行：
+    ipconfig /flushdns
+
+【步骤3】完全卸载 AdskLicensing 组件
+以管理员身份运行 PowerShell，执行以下命令：
+
+# 卸载 AdskLicensing
+& "C:\Program Files (x86)\Common Files\Autodesk Shared\AdskLicensing\uninstall.exe" --mode unattended
+
+# 如果上述命令无效，强制删除目录
+Remove-Item -Path "C:\Program Files (x86)\Common Files\Autodesk Shared\AdskLicensing" -Recurse -Force
+
+【步骤4】清理 Autodesk 缓存
+执行以下 PowerShell 命令：
+
+$pathsToClean = @(
+    "$env:LOCALAPPDATA\Autodesk\ODIS",
+    "$env:LOCALAPPDATA\Autodesk\Identity Services",
+    "$env:LOCALAPPDATA\Autodesk\Genuine Autodesk Service",
+    "$env:LOCALAPPDATA\Autodesk\CER",
+    "$env:APPDATA\Autodesk\ADPSDK",
+    "$env:TEMP\Autodesk"
+)
+foreach ($path in $pathsToClean) {
+    if (Test-Path $path) {
+        Remove-Item -Path $path -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
+
+【步骤5】重新安装 AdskLicensing 组件
+从 Maya 安装包中单独安装许可组件：
+
+& "D:\I_installing software\Maya_2024.2\x86\Licensing\AdskLicensing-installer.exe" --mode unattended
+
+注意：路径根据实际安装包位置调整
+
+【步骤6】验证许可服务状态
+执行命令检查服务是否正常运行：
+    sc.exe query AdskLicensingService
+
+应显示 STATE: 4 RUNNING
+
+【步骤7】验证网络连接
+测试是否能连接 Autodesk 服务器：
+
+PowerShell 执行：
+Invoke-WebRequest -Uri "https://registeronce.autodesk.com" -TimeoutSec 15 -UseBasicParsing
+
+如果返回状态码 200，说明网络正常
+
+【步骤8】重新安装 Maya 2024
+- 右键安装程序 → "以管理员身份运行"
+- 保持网络连接稳定
+- 正常登录 Autodesk 账户完成安装
+
+================================================================================
+                              快速命令汇总
+================================================================================
+
+# 1. 刷新 DNS
+ipconfig /flushdns
+
+# 2. 卸载 AdskLicensing
+& "C:\Program Files (x86)\Common Files\Autodesk Shared\AdskLicensing\uninstall.exe" --mode unattended
+
+# 3. 强制删除残留
+Remove-Item -Path "C:\Program Files (x86)\Common Files\Autodesk Shared\AdskLicensing" -Recurse -Force
+
+# 4. 清理缓存（一键命令）
+Remove-Item -Path "$env:LOCALAPPDATA\Autodesk\ODIS","$env:LOCALAPPDATA\Autodesk\Identity Services","$env:LOCALAPPDATA\Autodesk\CER" -Recurse -Force -ErrorAction SilentlyContinue
+
+# 5. 重装许可组件（路径按实际调整）
+& "安装包路径\x86\Licensing\AdskLicensing-installer.exe" --mode unattended
+
+# 6. 检查服务状态
+sc.exe query AdskLicensingService
+
+================================================================================
+                              注意事项
+================================================================================
+
+1. 所有命令必须以管理员身份运行
+2. 安装前务必关闭 VPN
+3. 确保网络能访问 *.autodesk.com
+4. 如果公司有防火墙，需要开放以下域名：
+   - registeronce.autodesk.com
+   - licensing.autodesk.com
+5. 安装日志位置：%TEMP%\Maya_2024_install.log
+
+================================================================================
+                              文档信息
+================================================================================
+创建日期：2025年12月19日
+适用版本：Maya 2024 / Maya 2024.2
+操作系统：Windows 10/11
+================================================================================

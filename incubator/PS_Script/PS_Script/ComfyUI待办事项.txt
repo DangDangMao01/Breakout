@@ -1,0 +1,35 @@
+ComfyUI 待办事项
+================
+创建时间: 2025-12-19
+
+【已完成】
+✓ 创建 PS + ComfyUI 联合启动脚本 (启动PS和ComfyUI.bat)
+✓ 安装 ComfyUI-Manager 插件
+✓ 安装 ComfyUI-Copilot 插件
+
+【待完成】
+1. ComfyUI-Copilot 配置（插件已安装 ✓）
+   - 首次使用需输入邮箱获取 API Key
+   - 在 Copilot 面板点击设置按钮配置
+   - 注意：服务部署在新加坡，可能需要科学上网
+
+2. ✓ 完善 PS + ComfyUI 联动脚本 (已完成 2025-12-19)
+   - comfyui_inpaint.py (局部重绘) - 已升级到 v2.0
+   - comfyui_ps_bridge.py (PS桥接) - 已升级到 v2.0
+   - comfyui_utils.py (工具模块) - 新增
+   - settings.json (配置文件) - 新增
+   - 已实现功能:
+     ✓ 错误处理和连接检测
+     ✓ 配置文件支持 (settings.json)
+     ✓ 进度反馈
+     ✓ 更好的 PS 图层导入
+     ✓ 多模型支持
+
+【相关文件位置】
+- 启动脚本: PS_Script/启动PS和ComfyUI.bat
+- Inpaint脚本: PS_Script/comfyui_inpaint.py
+- PS桥接脚本: PS_Script/comfyui_ps_bridge.py
+- 工具模块: PS_Script/comfyui_utils.py
+- 配置文件: PS_Script/settings.json
+- ComfyUI路径: D:\Program Files\ComfyUI_windows_portable
+- PS路径: C:\Program Files\Adobe\Adobe Photoshop 2026

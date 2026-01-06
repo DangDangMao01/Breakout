@@ -1,0 +1,132 @@
+================================================================================
+                    Kiro 会话记录 - 2025年12月21日
+================================================================================
+
+【会话主题】
+1. Maya 2024 安装错误 1603 修复
+2. AI 3D 生成本地部署方案讨论
+3. Steering 知识库整理
+4. MCP 服务器 Python 版本兼容问题修复
+
+================================================================================
+                    问题1：Maya 2024 安装失败
+================================================================================
+
+【问题】错误代码 1603，安装无法完成
+
+【原因】Autodesk Licensing Agent 服务超时，VPN 导致无法连接许可服务器
+
+【解决步骤】
+1. 关闭 VPN
+2. 刷新 DNS：ipconfig /flushdns
+3. 卸载 AdskLicensing 组件
+4. 清理 Autodesk 缓存
+5. 重装 AdskLicensing
+6. 重新安装 Maya
+
+【结果】✅ 安装成功
+
+【文档】Maya2024安装问题解决方案.txt
+
+================================================================================
+                    问题2：AI 3D 生成本地部署
+================================================================================
+
+【设备配置】
+- CPU：Intel i7-14700K
+- 内存：32GB
+- GPU：RTX 3060 12GB
+
+【Hunyuan3D 2.1 硬件需求】
+- Shape 生成：10GB ✅ 可以
+- Texture 生成：21GB ❌ 不足
+- 完整流程：29GB ❌ 不足
+
+【建议方案】
+1. 只用 Shape 生成 + 外部贴图工具
+2. 使用轻量替代：TripoSR / InstantMesh / Trellis
+3. 长期考虑升级显卡
+
+【文档】AI_3D生成本地部署方案.txt
+
+================================================================================
+                    问题3：Steering 知识库整理
+================================================================================
+
+【说明】Steering 是 Kiro 的本地知识库，存放在 .kiro/steering/ 目录
+
+【特点】
+- 完全本地存储，无时间限制
+- 跨设备使用：复制项目文件夹即可
+- 在聊天中用 # 引用
+
+【已创建文件】
+.kiro/steering/
+├── mcp-config-guide.md      # MCP 配置问题
+├── maya-install-guide.md    # Maya 安装问题
+└── ai-3d-deployment.md      # AI 3D 部署方案
+
+【路径】D:\Program Files\ComfyUI_windows_portable\.kiro\steering\
+
+================================================================================
+                    问题4：MCP aws-docs 服务器启动失败
+================================================================================
+
+【错误日志】
+Failed to install: pywin32-311-cp314-cp314-win_amd64.whl
+Caused by: 系统无法打开指定的设备或文件
+
+【原因】Python 3.14 太新，pywin32 没有预编译包支持
+
+【解决方案】在 uvx 命令中指定使用 Python 3.9
+
+【配置修改】
+修改前：
+"args": ["awslabs.aws-documentation-mcp-server@latest"]
+
+修改后：
+"args": ["--python", "3.9", "awslabs.aws-documentation-mcp-server@latest"]
+
+【配置文件】C:\Users\Administrator\.kiro\settings\mcp.json
+
+================================================================================
+                    最终 MCP 配置
+================================================================================
+
+{
+  "mcpServers": {
+    "aws-docs": {
+      "command": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvx.exe",
+      "args": ["--python", "3.9", "awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "UV_HTTP_TIMEOUT": "300"
+      }
+    },
+    "fetch": {
+      "command": "...(同上)...",
+      "args": ["--python", "3.9", "mcp-server-fetch"]
+    },
+    "filesystem": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\Administrator"]
+    },
+    "memory": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    }
+  }
+}
+
+================================================================================
+                    生成的文档清单
+================================================================================
+
+1. Maya2024安装问题解决方案.txt
+2. AI_3D生成本地部署方案.txt
+3. .kiro/steering/mcp-config-guide.md
+4. .kiro/steering/maya-install-guide.md
+5. .kiro/steering/ai-3d-deployment.md
+6. 会话记录_2025-12-21.txt（本文件）
+
+================================================================================

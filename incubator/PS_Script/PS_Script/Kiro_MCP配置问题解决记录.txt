@@ -1,0 +1,93 @@
+Kiro MCP 配置问题解决记录
+==========================
+日期: 2025-12-19
+
+【问题1】uvx 命令报错 "该版本的 %1 与你运行的 Windows 版本不兼容"
+------------------------------------------------------------------------
+原因: Kiro 启动 MCP 服务器时使用的 PATH 环境与命令行不同，找不到正确的 uvx.exe
+
+解决方法: 在 mcp.json 中使用 uvx.exe 的完整路径
+  "command": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvx.exe"
+
+
+【问题2】uvx 下载依赖包超时
+------------------------------------------------------------------------
+原因: 默认超时时间 30 秒太短，网络下载大文件时超时
+
+解决方法: 在 env 中添加 UV_HTTP_TIMEOUT 环境变量
+  "env": {
+    "UV_HTTP_TIMEOUT": "300"
+  }
+
+
+【问题3】npx 命令报错 "不是内部或外部命令"
+------------------------------------------------------------------------
+原因: 系统未安装 Node.js
+
+解决方法: 
+1. 下载 Node.js: https://nodejs.org/
+2. 或使用命令安装:
+   Invoke-WebRequest -Uri "https://nodejs.org/dist/v22.12.0/node-v22.12.0-x64.msi" -OutFile "$env:TEMP\node-installer.msi"
+   Start-Process msiexec.exe -ArgumentList "/i", "$env:TEMP\node-installer.msi", "/qn", "/norestart" -Wait
+
+
+【问题4】npm/npx 报错 "禁止运行脚本"
+------------------------------------------------------------------------
+原因: PowerShell 执行策略阻止运行 .ps1 脚本
+
+解决方法: 
+1. 修改执行策略:
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+
+2. 或在 mcp.json 中使用 npx.cmd 而不是 npx:
+   "command": "C:\\Program Files\\nodejs\\npx.cmd"
+
+
+【最终可用的 mcp.json 配置】
+------------------------------------------------------------------------
+{
+  "mcpServers": {
+    "aws-docs": {
+      "command": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvx.exe",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "UV_HTTP_TIMEOUT": "300"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "fetch": {
+      "command": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\uvx.exe",
+      "args": ["mcp-server-fetch"],
+      "env": {
+        "UV_HTTP_TIMEOUT": "300"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "filesystem": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\Administrator"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    },
+    "memory": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+
+
+【关键点总结】
+------------------------------------------------------------------------
+1. uvx 类服务器: 使用 Python Scripts 目录下的完整路径
+2. npx 类服务器: 使用 npx.cmd 的完整路径（避免 PowerShell 脚本限制）
+3. 网络下载慢: 添加 UV_HTTP_TIMEOUT 环境变量增加超时时间
+4. 配置文件位置: C:\Users\Administrator\.kiro\settings\mcp.json
+5. 修改配置后: 需要在 Kiro 中重新连接 MCP 服务器或重启 Kiro

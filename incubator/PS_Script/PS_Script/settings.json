@@ -1,0 +1,28 @@
+{
+    "comfyui": {
+        "url": "http://127.0.0.1:8188",
+        "timeout": 300
+    },
+    "models": {
+        "default": "全能 dreamshaper_8.safetensors",
+        "available": [
+            "全能 dreamshaper_8.safetensors",
+            "sd_xl_base_1.0.safetensors",
+            "v1-5-pruned-emaonly.safetensors"
+        ]
+    },
+    "generation": {
+        "default_width": 512,
+        "default_height": 512,
+        "steps": 20,
+        "cfg": 7,
+        "sampler": "euler_ancestral",
+        "scheduler": "normal",
+        "denoise": 0.85
+    },
+    "inpaint": {
+        "grow_mask_by": 6,
+        "denoise": 0.85
+    },
+    "negative_prompt": "bad quality, blurry, ugly, deformed, worst quality, low resolution"
+}
