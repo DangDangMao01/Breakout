@@ -1,0 +1,14 @@
+# 网络搜索增强功能依赖
+
+# 核心依赖
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# 搜索工具
+duckduckgo-search>=6.0.0
+
+# RSS 订阅
+feedparser>=6.0.0
+
+# HTML 解析
+lxml>=5.0.0

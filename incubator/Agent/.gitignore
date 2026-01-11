@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 数据和日志
+data/
+logs/
+*.log
+temp/
+output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 测试
+.pytest_cache/
+.coverage
+htmlcov/
+test_memory/
+
+# 操作系统
+.DS_Store
+Thumbs.db

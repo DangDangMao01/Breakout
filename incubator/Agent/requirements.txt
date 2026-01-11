@@ -1,0 +1,19 @@
+# LLM 和智能体框架
+langchain>=0.1.0
+langchain-community>=0.0.20
+ollama>=0.1.0
+
+# 向量数据库
+chromadb>=0.4.0
+
+# 工具库
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+pyyaml>=6.0
+
+# Blender (通过 bpy 模块，需在 Blender 内运行)
+# Maya (通过 maya.cmds，需在 Maya 内运行)
+
+# 通用工具
+requests>=2.31.0
+pillow>=10.0.0

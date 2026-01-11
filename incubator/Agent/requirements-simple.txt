@@ -1,0 +1,16 @@
+# 简化版依赖 - 只安装核心功能所需的包
+
+# 核心依赖
+requests>=2.31.0
+pyyaml>=6.0
+pillow>=10.0.0
+
+# Ollama 客户端
+ollama>=0.3.0
+
+# 向量数据库（可选，用于记忆系统）
+# chromadb>=0.4.0
+
+# LangChain（可选，用于高级功能）
+# langchain>=0.1.0
+# langchain-community>=0.0.20

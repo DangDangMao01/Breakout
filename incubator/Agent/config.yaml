@@ -1,0 +1,36 @@
+# DCC 智能体系统配置
+
+# Ollama 配置
+ollama:
+  host: "http://localhost:11434"
+  model: "qwen2.5:32b"  # 或 llama3.1:70b
+  temperature: 0.7
+  max_tokens: 2048
+
+# 软件路径配置
+software:
+  blender:
+    executable: "C:/Program Files/Blender Foundation/Blender 4.0/blender.exe"
+    python_path: "C:/Program Files/Blender Foundation/Blender 4.0/4.0/python/bin/python.exe"
+  maya:
+    executable: "C:/Program Files/Autodesk/Maya2024/bin/maya.exe"
+    python_path: "C:/Program Files/Autodesk/Maya2024/bin/mayapy.exe"
+  unity:
+    executable: "C:/Program Files/Unity/Hub/Editor/2022.3.62f3c1/Editor/Unity.exe"
+    project_path: "E:/Unity_project_file"
+
+# 记忆系统配置
+memory:
+  vector_db: "chromadb"
+  persist_directory: "./data/memory"
+  collection_name: "dcc_agent_memory"
+
+# 工作流配置
+workflows:
+  output_directory: "./output"
+  temp_directory: "./temp"
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: "./logs/agent.log"
