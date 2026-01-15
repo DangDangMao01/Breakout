@@ -34,6 +34,12 @@ rollout Skin_Check "SkinCheck"
 	local Bone_Name =#()
 	local selmode_Name =""            -- 选择模型的命名
 	progressBar QR_bar  color:blue		---进度条
+	
+	struct bone_weight
+	(
+		n_ame,
+		index
+	)
 
 	
 	hyperlink lbl_help "帮助" address:"https://www.cgjoy.com/forum.php?mod=viewthread&tid=211812&page=1&extra=#pid9898326" align:#center offset:[0,10]
@@ -44,21 +50,18 @@ rollout Skin_Check "SkinCheck"
 	(
 		local usedBone = #{}
 		local numSkinVerts = skinOps.getNumberVertices objSkin
+		local updateStep = amax 1 ((numSkinVerts/100) as integer)
 		for n=1 to numSkinVerts do
 		(
 			local numBoneWeights = skinOps.getVertexWeightCount objSkin n
 			for b=1 to numBoneWeights do
 			(
 				local boneID = skinOps.getVertexWeightBoneID objSkin n b
-				if boneID != undefined do usedBone[boneID] = true
+				if (boneID != undefined and boneID > 0) do usedBone[boneID] = true
 			)
+			if (mod n updateStep) == 0 do QR_bar.value = 100.*n/numSkinVerts
 		)
-		
-		struct bone_weight  ---绑定骨骼ID和骨骼名
-		(
-			n_ame,
-			index
-		)
+		QR_bar.value = 0
 
 		
 		un_id =#() -- 无权重骨骼ID
@@ -121,16 +124,15 @@ rollout Skin_Check "SkinCheck"
 	
 	fn SkinBoneId  = ---优化权重位数
 	(
-		
-		
-		numSkinVerts = #{1..(skinOps.getNumberVertices objSkin)} --获取参与蒙皮的点
-		
+		local numSkinVerts = skinOps.getNumberVertices objSkin
+		local updateStep = amax 1 ((numSkinVerts/100) as integer)
 		local tem_id = #()
 		local tem_val = #()
 		
-		for n=1 to numSkinVerts.count do
+		for n=1 to numSkinVerts do
 		(
 			numBoneWeights = skinOps.getVertexWeightCount objSkin n    --每个点有几根骨骼影响
+			if numBoneWeights < 1 do continue
 			
             for b=1 to numBoneWeights do
 			(
@@ -154,7 +156,7 @@ rollout Skin_Check "SkinCheck"
 			
 			skinOps.SetVertexWeights objSkin n tem_id[1] tem
 
-			QR_bar.value = 100-100.*n/numSkinVerts.count
+			if (n == numSkinVerts or (mod n updateStep) == 0) do QR_bar.value = 100.*n/numSkinVerts
 		)
 			QR_bar.value = 0
 	)
@@ -174,6 +176,13 @@ rollout Skin_Check "SkinCheck"
 	fn Get_NumberBones = ---检查蒙皮骨骼数
 	(
 		max modify mode
+		if selection.count != 1 then
+		(
+			skin_num = 0
+			BoneNumber.text= "0"
+			messageBox "选择单个模型 "
+			return false
+		)
 		objSkin  = $.modifiers[#Skin]
 		if objSkin == undefined then
 		(
@@ -216,11 +225,16 @@ rollout Skin_Check "SkinCheck"
 	(
 		if selection.count == 1 then	
 		(
-
-			Get_NumberBones ()
-			UnSkinBoneId ()
-
-			ChangeBoneName un_id	
+			if (Get_NumberBones ()) == true then
+			(
+				UnSkinBoneId ()
+				ChangeBoneName un_id
+			)
+			else
+			(
+				un_id = #()
+				Un_BoneName = #()
+			)
 
 		)
 		else
@@ -235,7 +249,6 @@ rollout Skin_Check "SkinCheck"
 		ShowBone()
 		
 		BoneNumber.text= skin_num as string
-		skin_num = 0
 	
 	
 	)
@@ -244,6 +257,11 @@ rollout Skin_Check "SkinCheck"
 	(	
 		
 		get_Skinbone_fn ()
+		if Bone_Name.count == 0 then
+		(
+			messageBox "未找到蒙皮骨骼"
+			return false
+		)
 		all_bone = for i in $* where classof i == BoneGeometry or classof i == Biped_Object collect i
 		select all_bone
 		max hide selection
@@ -266,8 +284,11 @@ rollout Skin_Check "SkinCheck"
 		(
 			if (Get_NumberBones ()) == true then
 			(
-				skinOps.RemoveZeroWeights objSkin
-				skinOps.multiRemove objSkin
+				undo "SkinCheck Batch Remove" on
+				(
+					skinOps.RemoveZeroWeights objSkin
+					try (skinOps.multiRemove objSkin) catch (messageBox "当前版本不支持 multiRemove，请用“全部移除”")
+				)
 			)
 
 		)
@@ -284,7 +305,8 @@ rollout Skin_Check "SkinCheck"
 	
 	on lbx1 selected nameIndex do  ---选择
 	(
-
+		if objSkin == undefined then return false
+		if lbx1.selection < 1 then return false
 		local a_index = (un_id[lbx1.selection]).index  ---获取骨骼ID
 		skinOps.SelectBone objSkin a_index     ----选取ID骨骼
 		
@@ -308,9 +330,11 @@ rollout Skin_Check "SkinCheck"
 	
 	on lbx1 doubleClicked sel do  ---双击删除
 	(
+		if objSkin == undefined then return false
+		if lbx1.selection < 1 then return false
 		local a_index = (un_id[lbx1.selection]).index
 
-		skinOps.removebone objSkin a_index
+		undo "SkinCheck Remove Bone" on (skinOps.removebone objSkin a_index)
 		
 		temp = lbx1.items
 
@@ -327,7 +351,6 @@ rollout Skin_Check "SkinCheck"
 		ShowBone()
 		
 		BoneNumber.text= skin_num as string
-		skin_num = 0
 
 	)
 	
@@ -336,9 +359,11 @@ rollout Skin_Check "SkinCheck"
 
 	on lbx1 rightClick sel do  ---右击删除
 	(
+		if objSkin == undefined then return false
+		if lbx1.selection < 1 then return false
 		local a_index = (un_id[lbx1.selection]).index
 
-		skinOps.removebone objSkin a_index
+		undo "SkinCheck Remove Bone" on (skinOps.removebone objSkin a_index)
 		
 		temp = lbx1.items
 
@@ -355,7 +380,6 @@ rollout Skin_Check "SkinCheck"
 		ShowBone()
 		
 		BoneNumber.text= skin_num as string
-		skin_num = 0
 	)
 	
 ----------------------------------------------------------------------------------------------------------------------------	
@@ -364,13 +388,18 @@ rollout Skin_Check "SkinCheck"
 	(
 		
 		max modify mode
-		
-		for i =un_id.count to 1 by -1 do
+		if (Get_NumberBones ()) == true then
 		(
-			local a_id = un_id[i].index
-			modPanel.setCurrentObject objSkin ---选择蒙皮层
-			skinOps.removebone objSkin a_id
-			QR_bar.value = 100-100.*i/un_id.count
+			undo "SkinCheck Quick Remove" on
+			(
+				for i =un_id.count to 1 by -1 do
+				(
+					local a_id = un_id[i].index
+					modPanel.setCurrentObject objSkin
+					skinOps.removebone objSkin a_id
+					QR_bar.value = 100.*(un_id.count - i + 1)/un_id.count
+				)
+			)
 		)
 		
 		Get_NumberBones () ---检查蒙皮骨骼数
@@ -383,7 +412,6 @@ rollout Skin_Check "SkinCheck"
 		
 		
 		BoneNumber.text= skin_num as string
-		skin_num = 0
 		
 		QR_bar.value = 0
 		
@@ -396,8 +424,10 @@ rollout Skin_Check "SkinCheck"
 		val_num =1000
 		if selection.count == 1 then	
 		(
-			Get_NumberBones ()
-			SkinBoneId ()
+			if (Get_NumberBones ()) == true then
+			(
+				undo "SkinCheck Round Weights" on (SkinBoneId ())
+			)
 
 		)
 		else
@@ -414,8 +444,10 @@ rollout Skin_Check "SkinCheck"
 		val_num =100
 		if selection.count == 1 then	
 		(
-			Get_NumberBones ()
-			SkinBoneId () 
+			if (Get_NumberBones ()) == true then
+			(
+				undo "SkinCheck Round Weights" on (SkinBoneId ())
+			)
 
 		)
 		else

@@ -1,46 +1,46 @@
 -------------------------------------------------------
 -------------------AnimationTool-----------------------
 ------------------Time:2018-06-07----------------------
--------------------Author:ÇÇÀÚ-------------------------
+-------------------Author:ä¹”ç£Š-------------------------
 ------------------QQ:409856476-------------------------
 ---------------------- by Joe--------------------------
 ------------------QQ: 738746223------------------------
 -------------------------------------------------------
---2019Äê4ÔÂ13ÈÕ
---Ìí¼ÓÖ»ÏÔÊ¾ÃÉÆ¤¹Ç÷À
+--2019å¹´4æœˆ13æ—¥
+--æ·»åŠ åªæ˜¾ç¤ºè’™çš®éª¨éª¼
 
 rollout Skin_Check "SkinCheck"
 (
-	--checkbox 'Hide' "" pos:[10,10] width:10  checked:true tooltip:"¹´Ñ¡Ê±Ö»ÏÔÊ¾Ä£ĞÍÓëÃÉÆ¤¹Ç÷À"align:#left
-	button Skin_Check "¼ì²éÃÉÆ¤" pos:[13,7] tooltip:"Ñ¡ÔñĞèÒª¼ì²éµÄÃÉÆ¤" align:#left
-	button Batch_Remove "ÅúÁ¿ÒÆ³ı" pos:[89,7] tooltip:"Çë×¢Òâ£¬´Ë¹¦ÄÜ¿ÉÅúÁ¿ÒÆ³ıËùÓĞÃÉÆ¤¹Ç÷À"align:#right
-	edittext BoneNumber "ÃÉÆ¤¹Ç÷ÀÊı:"
+	--checkbox 'Hide' "" pos:[10,10] width:10  checked:true tooltip:"å‹¾é€‰æ—¶åªæ˜¾ç¤ºæ¨¡å‹ä¸è’™çš®éª¨éª¼"align:#left
+	button Skin_Check "æ£€æŸ¥è’™çš®" pos:[13,7] tooltip:"é€‰æ‹©éœ€è¦æ£€æŸ¥çš„è’™çš®" align:#left
+	button Batch_Remove "æ‰¹é‡ç§»é™¤" pos:[89,7] tooltip:"è¯·æ³¨æ„ï¼Œæ­¤åŠŸèƒ½å¯æ‰¹é‡ç§»é™¤æ‰€æœ‰è’™çš®éª¨éª¼"align:#right
+	edittext BoneNumber "è’™çš®éª¨éª¼æ•°:"
 	
-	listbox 'lbx1' "ÎŞÈ¨ÖØ¹Ç÷À£º" tooltip:"Ë«»÷»òÕßÓÒ»÷Ñ¡ÔñÉ¾³ı"
+	listbox 'lbx1' "æ— æƒé‡éª¨éª¼ï¼š" tooltip:"åŒå‡»æˆ–è€…å³å‡»é€‰æ‹©åˆ é™¤"
 	
-	button 'skinHide' "¼ò½İÏÔÊ¾" tooltip:"Ö»ÏÔÊ¾ÃÉÆ¤¹Ç÷À" across:2 align:#left
-	button Quick_Remove "È«²¿ÒÆ³ı" tooltip:"ÒÆ³ıÁĞ±íÖĞËùÓĞÎŞÈ¨ÖØ¹Ç÷À" align:#right
+	button 'skinHide' "ç®€æ·æ˜¾ç¤º" tooltip:"åªæ˜¾ç¤ºè’™çš®éª¨éª¼" across:2 align:#left
+	button Quick_Remove "å…¨éƒ¨ç§»é™¤" tooltip:"ç§»é™¤åˆ—è¡¨ä¸­æ‰€æœ‰æ— æƒé‡éª¨éª¼" align:#right
 	
-	button 'Batch_Remove_0.001' "0.001Î»" pos:[13,239]  width:60 height:21 toolTip:"È¥³ı0.001Î»È¨ÖØ" across:2 align:#left
+	button 'Batch_Remove_0.001' "0.001ä½" pos:[13,239]  width:60 height:21 toolTip:"å»é™¤0.001ä½æƒé‡" across:2 align:#left
 	
-	button 'Batch_Remove_0.01' "0.01Î»"   width:60 height:21 toolTip:"È¥³ı0.01Î»È¨ÖØ" align:#right
+	button 'Batch_Remove_0.01' "0.01ä½"   width:60 height:21 toolTip:"å»é™¤0.01ä½æƒé‡" align:#right
 	
 	
-	local un_id =#() 					---ÎŞÈ¨ÖØµÄ¹Ç÷ÀID
-	local Un_BoneName =#() 			--ÎŞÈ¨ÖØ¹Ç÷ÀÃû×Ö
-	local objSkin  					---¼ñÈ¡µÄÃÉÆ¤ĞÅÏ¢
-	local val_num =100   				---È¨ÖØÎ»Êı£¬Ä¬ÈÏ0.001
-	local skin_num = 0 				---ÃÉÆ¤¹Ç÷ÀÊı
+	local un_id =#() 					---æ— æƒé‡çš„éª¨éª¼ID
+	local Un_BoneName =#() 			--æ— æƒé‡éª¨éª¼åå­—
+	local objSkin  					---æ¡å–çš„è’™çš®ä¿¡æ¯
+	local val_num =100   				---æƒé‡ä½æ•°ï¼Œé»˜è®¤0.001
+	local skin_num = 0 				---è’™çš®éª¨éª¼æ•°
 	local Bone_Name =#()
-	local selmode_Name =""            -- Ñ¡ÔñÄ£ĞÍµÄÃüÃû
-	progressBar QR_bar  color:blue		---½ø¶ÈÌõ
+	local selmode_Name =""            -- é€‰æ‹©æ¨¡å‹çš„å‘½å
+	progressBar QR_bar  color:blue		---è¿›åº¦æ¡
 
 	
-	hyperlink lbl_help "°ïÖú" address:"https://www.cgjoy.com/forum.php?mod=viewthread&tid=211812&page=1&extra=#pid9898326" align:#center offset:[0,10]
+	hyperlink lbl_help "å¸®åŠ©" address:"https://www.cgjoy.com/forum.php?mod=viewthread&tid=211812&page=1&extra=#pid9898326" align:#center offset:[0,10]
 	
 	-------------------------------------------------------------------------------------------------------------------------------------------
 
-	fn UnSkinBoneId   =  ---²éÕÒÎŞÈ¨ÖØ¹Ç÷ÀID
+	fn UnSkinBoneId   =  ---æŸ¥æ‰¾æ— æƒé‡éª¨éª¼ID
 	(
 		local usedBone = #{}
 		local numSkinVerts = skinOps.getNumberVertices objSkin
@@ -54,14 +54,14 @@ rollout Skin_Check "SkinCheck"
 			)
 		)
 		
-		struct bone_weight  ---°ó¶¨¹Ç÷ÀIDºÍ¹Ç÷ÀÃû
+		struct bone_weight  ---ç»‘å®šéª¨éª¼IDå’Œéª¨éª¼å
 		(
 			n_ame,
 			index
 		)
 
 		
-		un_id =#() -- ÎŞÈ¨ÖØ¹Ç÷ÀID
+		un_id =#() -- æ— æƒé‡éª¨éª¼ID
 		for i =1 to skin_num do
 		(
 			if (usedBone[i] == false) do
@@ -76,7 +76,7 @@ rollout Skin_Check "SkinCheck"
 	)
 ----------------------------------------------------------------------------------------------------------------------------
 
-	fn ChangeBoneName  a_array = ---×ª»»ID¹Ç÷ÀÃû
+	fn ChangeBoneName  a_array = ---è½¬æ¢IDéª¨éª¼å
 	(
 		
 		Un_BoneName =#()
@@ -93,7 +93,7 @@ rollout Skin_Check "SkinCheck"
 ----------------------------------------------------------------------------------------------------------------------------
 	
 	
-	fn rounding_off val  = --- ËÄÉáÎåÈë
+	fn rounding_off val  = --- å››èˆäº”å…¥
 	(
 
 		val = (val*val_num+0.5) as integer
@@ -105,7 +105,7 @@ rollout Skin_Check "SkinCheck"
 	
 ----------------------------------------------------------------------------------------------------------------------------
 	
-	fn round_off val  = --- È¡Õû
+	fn round_off val  = --- å–æ•´
 	(
 
 		val = (val*val_num) as integer
@@ -119,22 +119,22 @@ rollout Skin_Check "SkinCheck"
 	
 ----------------------------------------------------------------------------------------------------------------------------
 	
-	fn SkinBoneId  = ---ÓÅ»¯È¨ÖØÎ»Êı
+	fn SkinBoneId  = ---ä¼˜åŒ–æƒé‡ä½æ•°
 	(
 		
 		
-		numSkinVerts = #{1..(skinOps.getNumberVertices objSkin)} --»ñÈ¡²ÎÓëÃÉÆ¤µÄµã
+		numSkinVerts = #{1..(skinOps.getNumberVertices objSkin)} --è·å–å‚ä¸è’™çš®çš„ç‚¹
 		
 		local tem_id = #()
 		local tem_val = #()
 		
 		for n=1 to numSkinVerts.count do
 		(
-			numBoneWeights = skinOps.getVertexWeightCount objSkin n    --Ã¿¸öµãÓĞ¼¸¸ù¹Ç÷ÀÓ°Ïì
+			numBoneWeights = skinOps.getVertexWeightCount objSkin n    --æ¯ä¸ªç‚¹æœ‰å‡ æ ¹éª¨éª¼å½±å“
 			
             for b=1 to numBoneWeights do
 			(
-				vertexWeight = skinOps.getVertexWeight objSkin n b --»ñÈ¡µÚn¸öµã²ÎÓëµÄµÚb¸ö¹Ç÷ÀµÄID
+				vertexWeight = skinOps.getVertexWeight objSkin n b --è·å–ç¬¬nä¸ªç‚¹å‚ä¸çš„ç¬¬bä¸ªéª¨éª¼çš„ID
 				
 				tem_id[b]  = skinOps.getVertexWeightBoneID objSkin n b
 				
@@ -163,7 +163,7 @@ rollout Skin_Check "SkinCheck"
 	
 ----------------------------------------------------------------------------------------------------------------------------	
 	
-	fn ShowBone  =   ---ÏÔÊ¾
+	fn ShowBone  =   ---æ˜¾ç¤º
 	(
 		lbx1.items=Un_BoneName
 		
@@ -171,7 +171,7 @@ rollout Skin_Check "SkinCheck"
 	)
 ----------------------------------------------------------------------------------------------------------------------------
 	
-	fn Get_NumberBones = ---¼ì²éÃÉÆ¤¹Ç÷ÀÊı
+	fn Get_NumberBones = ---æ£€æŸ¥è’™çš®éª¨éª¼æ•°
 	(
 		max modify mode
 		objSkin  = $.modifiers[#Skin]
@@ -179,7 +179,7 @@ rollout Skin_Check "SkinCheck"
 		(
 			skin_num = 0
 			BoneNumber.text= "0"
-			messageBox "µ±Ç°Ä£ĞÍÃ»ÓĞ Skin ĞŞ¸ÄÆ÷"
+			messageBox "å½“å‰æ¨¡å‹æ²¡æœ‰ Skin ä¿®æ”¹å™¨"
 			return false
 		)
 		selmode_Name = selection[1].name
@@ -191,7 +191,7 @@ rollout Skin_Check "SkinCheck"
 	)
 ----------------------------------------------------------------------------------------------------------------------------	
 
-	fn get_Skinbone_fn = --µÃµ½ÃÉÆ¤¹Ç÷À
+	fn get_Skinbone_fn = --å¾—åˆ°è’™çš®éª¨éª¼
 	(
 		Bone_Name = #()
 		if (Get_NumberBones ()) == true then
@@ -225,7 +225,7 @@ rollout Skin_Check "SkinCheck"
 		)
 		else
 		(
-			messageBox "Ñ¡Ôñµ¥¸öÄ£ĞÍ "
+			messageBox "é€‰æ‹©å•ä¸ªæ¨¡å‹ "
 		
 			Un_BoneName =#()
 			
@@ -260,7 +260,7 @@ rollout Skin_Check "SkinCheck"
 	
 ----------------------------------------------------------------------------------------------------------------------------	
 	
-	on Batch_Remove pressed do  ----ÅúÁ¿É¾³ı
+	on Batch_Remove pressed do  ----æ‰¹é‡åˆ é™¤
 	(
 		if selection.count == 1 then	
 		(
@@ -273,7 +273,7 @@ rollout Skin_Check "SkinCheck"
 		)
 		else
 		(
-			messageBox "Ñ¡Ôñµ¥¸öÄ£ĞÍ "
+			messageBox "é€‰æ‹©å•ä¸ªæ¨¡å‹ "
 		)
 
 		Get_NumberBones ()
@@ -282,11 +282,11 @@ rollout Skin_Check "SkinCheck"
 	)
 ----------------------------------------------------------------------------------------------------------------------------	
 	
-	on lbx1 selected nameIndex do  ---Ñ¡Ôñ
+	on lbx1 selected nameIndex do  ---é€‰æ‹©
 	(
 
-		local a_index = (un_id[lbx1.selection]).index  ---»ñÈ¡¹Ç÷ÀID
-		skinOps.SelectBone objSkin a_index     ----Ñ¡È¡ID¹Ç÷À
+		local a_index = (un_id[lbx1.selection]).index  ---è·å–éª¨éª¼ID
+		skinOps.SelectBone objSkin a_index     ----é€‰å–IDéª¨éª¼
 		
 		
 		/*
@@ -306,7 +306,7 @@ rollout Skin_Check "SkinCheck"
 	
 ----------------------------------------------------------------------------------------------------------------------------	
 	
-	on lbx1 doubleClicked sel do  ---Ë«»÷É¾³ı
+	on lbx1 doubleClicked sel do  ---åŒå‡»åˆ é™¤
 	(
 		local a_index = (un_id[lbx1.selection]).index
 
@@ -334,7 +334,7 @@ rollout Skin_Check "SkinCheck"
 ----------------------------------------------------------------------------------------------------------------------------	
 		
 
-	on lbx1 rightClick sel do  ---ÓÒ»÷É¾³ı
+	on lbx1 rightClick sel do  ---å³å‡»åˆ é™¤
 	(
 		local a_index = (un_id[lbx1.selection]).index
 
@@ -360,7 +360,7 @@ rollout Skin_Check "SkinCheck"
 	
 ----------------------------------------------------------------------------------------------------------------------------	
 	
-	on Quick_Remove pressed do  ---¿ìËÙÒÆ³ı
+	on Quick_Remove pressed do  ---å¿«é€Ÿç§»é™¤
 	(
 		
 		max modify mode
@@ -368,18 +368,18 @@ rollout Skin_Check "SkinCheck"
 		for i =un_id.count to 1 by -1 do
 		(
 			local a_id = un_id[i].index
-			modPanel.setCurrentObject objSkin ---Ñ¡ÔñÃÉÆ¤²ã
+			modPanel.setCurrentObject objSkin ---é€‰æ‹©è’™çš®å±‚
 			skinOps.removebone objSkin a_id
 			QR_bar.value = 100-100.*i/un_id.count
 		)
 		
-		Get_NumberBones () ---¼ì²éÃÉÆ¤¹Ç÷ÀÊı
+		Get_NumberBones () ---æ£€æŸ¥è’™çš®éª¨éª¼æ•°
 				
-		UnSkinBoneId () ---²éÕÒÎŞÈ¨ÖØ¹Ç÷ÀID
+		UnSkinBoneId () ---æŸ¥æ‰¾æ— æƒé‡éª¨éª¼ID
 
-		ChangeBoneName un_id ---×ª»»ID¹Ç÷ÀÃû
+		ChangeBoneName un_id ---è½¬æ¢IDéª¨éª¼å
 		
-		ShowBone() ---ÏÔÊ¾
+		ShowBone() ---æ˜¾ç¤º
 		
 		
 		BoneNumber.text= skin_num as string
@@ -391,7 +391,7 @@ rollout Skin_Check "SkinCheck"
 	
 ----------------------------------------------------------------------------------------------------------------------------	
 
-	on Batch_Remove_0.001 pressed do  ---È¥³ı0.001Î»
+	on Batch_Remove_0.001 pressed do  ---å»é™¤0.001ä½
 	(
 		val_num =1000
 		if selection.count == 1 then	
@@ -402,14 +402,14 @@ rollout Skin_Check "SkinCheck"
 		)
 		else
 		(
-			messageBox "Ñ¡Ôñµ¥¸öÄ£ĞÍ "
+			messageBox "é€‰æ‹©å•ä¸ªæ¨¡å‹ "
 			
 		)
 
 
 	)
 	
-	on Batch_Remove_0.01 pressed do ---È¥³ı0.01Î»
+	on Batch_Remove_0.01 pressed do ---å»é™¤0.01ä½
 	(
 		val_num =100
 		if selection.count == 1 then	
@@ -420,7 +420,7 @@ rollout Skin_Check "SkinCheck"
 		)
 		else
 		(
-			messageBox "Ñ¡Ôñµ¥¸öÄ£ĞÍ "
+			messageBox "é€‰æ‹©å•ä¸ªæ¨¡å‹ "
 			
 		)
  
@@ -432,16 +432,15 @@ rollout Skin_Check "SkinCheck"
 
 	rollout About_Sign "About" width:162
 	(
-		label b "º£Ôô"
+		label b "æµ·è´¼"
 		label c "409856476@qq.com"
 		label e "2018.06"
 	)
 
 
-	AllRollout = newRolloutFloater "ÃÉÆ¤¼ì²é" 175 360	
+	AllRollout = newRolloutFloater "è’™çš®æ£€æŸ¥" 175 360	
 	addRollout Skin_Check AllRollout	
 	addRollout About_Sign AllRollout
  
 	Skin_Check.open = true
 	About_Sign.open = false
-
