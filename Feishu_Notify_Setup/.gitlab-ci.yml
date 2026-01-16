@@ -1,0 +1,16 @@
+stages:
+  - notify
+
+notify_art_update:
+  stage: notify
+  tags:
+    - windows
+  variables:
+    # 【核心】完全禁用 Git 拉取，彻底解决 index.lock 和乱码问题
+    GIT_STRATEGY: none
+    PYTHONIOENCODING: "utf-8"
+  script:
+    - echo "跳过 Git 拉取，直接运行通知脚本..."
+    - cd C:\GitLab-Runner
+    - python notify.py
+  allow_failure: true
