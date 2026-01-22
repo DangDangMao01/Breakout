@@ -1,0 +1,14 @@
+【功能升级】飞书通知系统 v3.1 - 支持多人通知
+
+## 主要改进
+- 支持一个项目通知多个负责人
+- 修复 GitLab Runner 环境变量传递问题  
+- 使用 GIT_STRATEGY=none 避免中文文件名编码问题
+
+## 配置示例
+单人通知: "项目名": ["email@company.com"]
+多人通知: "项目名": ["email1@company.com", "email2@company.com"]
+
+## 测试状态
+- CI/CD 流程: 已通过
+- 飞书通知: 待明天验证

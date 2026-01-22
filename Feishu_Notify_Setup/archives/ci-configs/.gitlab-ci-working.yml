@@ -1,0 +1,19 @@
+stages:
+  - notify
+
+notify_art_update:
+  stage: notify
+  tags:
+    - windows
+  variables:
+    GIT_STRATEGY: none
+    PYTHONIOENCODING: "utf-8"
+  script:
+    - Write-Host "=== 开始美术资源变动检测 ==="
+    - Set-Location C:\GitLab-Runner
+    - C:\Users\Administrator\AppData\Local\Programs\Python\Python314\python.exe notify.py
+  only:
+    changes:
+      - "**/*"
+  allow_failure: true
+  retry: 1

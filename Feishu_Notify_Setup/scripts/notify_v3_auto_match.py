@@ -1,6 +1,13 @@
 import os
 import json
 import requests
+import sys
+
+# 设置标准输出编码为 UTF-8
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # 飞书配置
 APP_ID = os.environ.get('FEISHU_APP_ID')
@@ -40,36 +47,49 @@ def get_user_id_by_email(email, token):
 
 def find_owner_by_project(project_path, owners):
     """
-    根据项目路径查找对应的负责人邮箱
+    根据项目路径查找对应的负责人邮箱（支持多人）
     支持两种匹配方式：
     1. 精确匹配：项目路径包含完整的 key
     2. 模糊匹配：项目路径包含 key 的一部分
     
+    返回值：
+    - 单个邮箱字符串 → 返回 [email]
+    - 邮箱数组 → 返回 [email1, email2, ...]
+    - 未找到 → 返回 None
+    
     例如：
     - 项目路径: grouptwogame/Y_遇水发财
-    - owners.json: {"Y_遇水发财": "email@xxx.com"}
-    - 匹配成功 → 返回 email@xxx.com
+    - owners.json: {"Y_遇水发财": ["email1@xxx.com", "email2@xxx.com"]}
+    - 匹配成功 → 返回 ["email1@xxx.com", "email2@xxx.com"]
     """
     # 跳过注释字段
     valid_owners = {k: v for k, v in owners.items() if not k.startswith('_')}
     
     # 1. 精确匹配：项目路径包含完整的 key
-    for key, email in valid_owners.items():
+    for key, emails in valid_owners.items():
         if key in project_path:
-            print(f"✓ 精确匹配: 项目路径包含 '{key}'")
-            return email
+            print(f"[匹配] 精确匹配: 项目路径包含 '{key}'")
+            # 统一转换为列表
+            if isinstance(emails, str):
+                return [emails]
+            elif isinstance(emails, list):
+                return emails
     
     # 2. 模糊匹配：去掉项目前缀后匹配
-    for key, email in valid_owners.items():
+    for key, emails in valid_owners.items():
         # 去掉项目前缀（如 "Y_遇水发财" -> "遇水发财"）
         clean_key = key.split('_', 1)[-1] if '_' in key else key
         
         if clean_key in project_path:
-            print(f"✓ 模糊匹配: 项目路径包含 '{clean_key}' (来自 '{key}')")
-            return email
+            print(f"[匹配] 模糊匹配: 项目路径包含 '{clean_key}' (来自 '{key}')")
+            # 统一转换为列表
+            if isinstance(emails, str):
+                return [emails]
+            elif isinstance(emails, list):
+                return emails
     
     # 3. 未找到
-    print(f"✗ 未找到匹配: 项目路径 '{project_path}' 没有对应的负责人")
+    print(f"[未找到] 项目路径 '{project_path}' 没有对应的负责人")
     return None
 
 def send_card_message(user_id, project_name, user_name, commit_msg, commit_url, token):
@@ -77,20 +97,20 @@ def send_card_message(user_id, project_name, user_name, commit_msg, commit_url, 
     card = {
         "config": {"wide_screen_mode": True},
         "header": {
-            "title": {"tag": "plain_text", "content": "🎨 美术资源更新提醒"},
+            "title": {"tag": "plain_text", "content": "[美术资源更新提醒]"},
             "template": "blue"
         },
         "elements": [
             {
                 "tag": "div",
                 "fields": [
-                    {"is_short": True, "text": {"tag": "lark_md", "content": f"**📁 项目**\n{project_name}"}},
-                    {"is_short": True, "text": {"tag": "lark_md", "content": f"**👤 提交人**\n{user_name}"}}
+                    {"is_short": True, "text": {"tag": "lark_md", "content": f"**项目**\n{project_name}"}},
+                    {"is_short": True, "text": {"tag": "lark_md", "content": f"**提交人**\n{user_name}"}}
                 ]
             },
             {
                 "tag": "div",
-                "text": {"tag": "lark_md", "content": f"**💬 提交信息**\n{commit_msg}"}
+                "text": {"tag": "lark_md", "content": f"**提交信息**\n{commit_msg}"}
             },
             {
                 "tag": "action",
@@ -106,7 +126,7 @@ def send_card_message(user_id, project_name, user_name, commit_msg, commit_url, 
             {
                 "tag": "note",
                 "elements": [
-                    {"tag": "plain_text", "content": "🚀 请及时拉取最新资源！"}
+                    {"tag": "plain_text", "content": "请及时拉取最新资源！"}
                 ]
             }
         ]
@@ -149,7 +169,7 @@ def send_message(user_id, text, token):
 
 def main():
     print("=" * 60)
-    print(">>> 美术资源通知系统 v3.0 - 自动匹配版")
+    print(">>> 美术资源通知系统 v3.1 - 多人通知版")
     print("=" * 60)
     
     # 从环境变量获取提交信息
@@ -163,14 +183,14 @@ def main():
     test_mode = os.environ.get('TEST_MODE', 'false').lower() == 'true'
     test_email = os.environ.get('TEST_EMAIL', 'wangxinlai@huixuanjiasu.com')
     
-    print(f"📝 提交信息: {commit_message}")
-    print(f"👤 提交人: {user_name}")
-    print(f"📁 项目路径: {project_path}")
-    print(f"🔗 提交链接: {commit_url}")
+    print(f"[提交信息] {commit_message}")
+    print(f"[提交人] {user_name}")
+    print(f"[项目路径] {project_path}")
+    print(f"[提交链接] {commit_url}")
     
     if test_mode:
-        print(f"🧪 测试模式: 启用")
-        print(f"📧 测试邮箱: {test_email}")
+        print(f"[测试模式] 启用")
+        print(f"[测试邮箱] {test_email}")
     
     print("-" * 60)
     
@@ -178,78 +198,87 @@ def main():
     try:
         with open('owners.json', 'r', encoding='utf-8') as f:
             owners = json.load(f)
-        print(f"✓ 成功加载 owners.json，共 {len(owners)} 个配置")
+        print(f"[成功] 加载 owners.json，共 {len(owners)} 个配置")
     except FileNotFoundError:
-        print("✗ 错误: 找不到 owners.json 配置文件")
+        print("[错误] 找不到 owners.json 配置文件")
         return
     except json.JSONDecodeError:
-        print("✗ 错误: owners.json 格式不正确")
+        print("[错误] owners.json 格式不正确")
         return
 
     # 查找项目对应的负责人邮箱
-    print(f"\n🔍 正在查找项目 '{project_path}' 的负责人...")
+    print(f"\n[查找] 正在查找项目 '{project_path}' 的负责人...")
     
     # 测试模式：强制使用测试邮箱
     if test_mode:
-        owner_email = test_email
-        print(f"🧪 测试模式：使用测试邮箱 {owner_email}")
+        owner_emails = [test_email]
+        print(f"[测试模式] 使用测试邮箱 {test_email}")
     else:
-        owner_email = find_owner_by_project(project_path, owners)
+        owner_emails = find_owner_by_project(project_path, owners)
         
-        if not owner_email:
-            print(f"\n⚠️  未找到项目 '{project_path}' 的负责人配置")
-            print("💡 提示: 请在 owners.json 中添加配置")
-            print(f'   "项目名称": "email@huixuanjiasu.com"')
-            print(f'\n   例如：')
-            print(f'   "Y_遇水发财": "zhaolida@huixuanjiasu.com"')
+        if not owner_emails:
+            print(f"\n[警告] 未找到项目 '{project_path}' 的负责人配置")
+            print("[提示] 请在 owners.json 中添加配置")
+            print(f'   "项目名称": ["email@huixuanjiasu.com"]')
+            print(f'\n   或多人通知：')
+            print(f'   "项目名称": ["email1@huixuanjiasu.com", "email2@huixuanjiasu.com"]')
             return
         
-        print(f"✓ 找到负责人邮箱: {owner_email}")
+        print(f"[成功] 找到 {len(owner_emails)} 个负责人:")
+        for email in owner_emails:
+            print(f"  - {email}")
     print("-" * 60)
 
     # 获取飞书 Token
-    print("\n🔐 正在获取飞书访问令牌...")
+    print("\n[Token] 正在获取飞书访问令牌...")
     token = get_tenant_access_token()
     if not token:
-        print("✗ 获取令牌失败，无法发送通知")
+        print("[错误] 获取令牌失败，无法发送通知")
         return
-    print("✓ 令牌获取成功")
+    print("[成功] 令牌获取成功")
 
-    # 查找飞书用户 ID
-    print(f"\n🔍 正在查找飞书用户 ID: {owner_email}")
-    user_id = get_user_id_by_email(owner_email, token)
+    # 循环发送通知给所有负责人
+    success_count = 0
+    fail_count = 0
     
-    if not user_id:
-        print(f"✗ 无法找到邮箱 {owner_email} 对应的飞书用户")
-        print("💡 提示: 请检查邮箱是否正确，或用户是否在飞书中")
-        return
-    
-    print(f"✓ 找到用户 ID: {user_id}")
-    print("-" * 60)
+    for owner_email in owner_emails:
+        print(f"\n[查找] 正在查找飞书用户 ID: {owner_email}")
+        user_id = get_user_id_by_email(owner_email, token)
+        
+        if not user_id:
+            print(f"[错误] 无法找到邮箱 {owner_email} 对应的飞书用户")
+            print("[提示] 请检查邮箱是否正确，或用户是否在飞书中")
+            fail_count += 1
+            continue
+        
+        print(f"[成功] 找到用户 ID: {user_id}")
+        print("-" * 60)
 
-    # 发送通知
-    print(f"\n📤 正在发送通知给 {owner_email}...")
-    
-    # 尝试发送卡片消息
-    if send_card_message(user_id, project_path, user_name, commit_message, commit_url, token):
-        print("✓ 卡片消息发送成功！")
-        print("=" * 60)
-        print("✅ 通知发送完成")
-        print("=" * 60)
-    else:
-        # 卡片失败，降级为文本消息
-        print("⚠️  卡片消息发送失败，尝试文本消息...")
-        msg = f"【美术资源更新提醒】\n📁 项目：{project_path}\n👤 提交人：{user_name}\n💬 提交信息：{commit_message}\n🔗 查看变更：{commit_url}\n🚀 请及时拉取最新资源！"
-        if send_message(user_id, msg, token):
-            print("✓ 文本消息发送成功！")
-            print("=" * 60)
-            print("✅ 通知发送完成")
-            print("=" * 60)
+        # 发送通知
+        print(f"\n[发送] 正在发送通知给 {owner_email}...")
+        
+        # 尝试发送卡片消息
+        if send_card_message(user_id, project_path, user_name, commit_message, commit_url, token):
+            print(f"[成功] 卡片消息发送成功！")
+            success_count += 1
         else:
-            print("✗ 消息发送失败")
-            print("=" * 60)
-            print("❌ 通知发送失败")
-            print("=" * 60)
+            # 卡片失败，降级为文本消息
+            print("[警告] 卡片消息发送失败，尝试文本消息...")
+            msg = f"【美术资源更新提醒】\n项目：{project_path}\n提交人：{user_name}\n提交信息：{commit_message}\n查看变更：{commit_url}\n请及时拉取最新资源！"
+            if send_message(user_id, msg, token):
+                print(f"[成功] 文本消息发送成功！")
+                success_count += 1
+            else:
+                print(f"[错误] 消息发送失败")
+                fail_count += 1
+    
+    # 总结
+    print("\n" + "=" * 60)
+    print(f"[完成] 通知发送完成")
+    print(f"[成功] {success_count} 人")
+    if fail_count > 0:
+        print(f"[失败] {fail_count} 人")
+    print("=" * 60)
 
 if __name__ == "__main__":
     main()
