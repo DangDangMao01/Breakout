@@ -6,11 +6,20 @@ notify_art_update:
   tags:
     - windows
   variables:
-    # 【核心】完全禁用 Git 拉取，彻底解决 index.lock 和乱码问题
     GIT_STRATEGY: none
     PYTHONIOENCODING: "utf-8"
   script:
-    - echo "跳过 Git 拉取，直接运行通知脚本..."
-    - cd C:\GitLab-Runner
-    - python notify.py
+    - Write-Host "=== 开始美术资源变动检测 ==="
+    - Set-Location C:\GitLab-Runner
+    # 手动设置环境变量（因为 GIT_STRATEGY: none 会导致环境变量丢失）
+    - $env:CI_PROJECT_PATH = "GroupTwoGame/groupTowArt_Hb"
+    - $env:CI_COMMIT_MESSAGE = if ($env:CI_COMMIT_MESSAGE) { $env:CI_COMMIT_MESSAGE } else { "手动提交" }
+    - $env:GITLAB_USER_NAME = if ($env:GITLAB_USER_NAME) { $env:GITLAB_USER_NAME } else { "未知用户" }
+    - $env:CI_COMMIT_SHA = if ($env:CI_COMMIT_SHA) { $env:CI_COMMIT_SHA } else { "unknown" }
+    - $env:CI_PROJECT_URL = if ($env:CI_PROJECT_URL) { $env:CI_PROJECT_URL } else { "https://gitlab.com" }
+    - '& "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\python.exe" notify.py'
+  only:
+    changes:
+      - "**/*"
   allow_failure: true
+  retry: 1

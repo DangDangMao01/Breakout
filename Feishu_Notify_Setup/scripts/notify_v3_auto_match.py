@@ -35,14 +35,21 @@ def get_user_id_by_email(email, token):
     body = {"emails": [email]}
     headers = {"Authorization": "Bearer " + token, "Content-Type": "application/json"}
     try:
+        print(f"[调试] 请求 URL: {url}")
+        print(f"[调试] 请求 Body: {body}")
         r = requests.post(url, json=body, headers=headers)
         data = r.json()
+        print(f"[调试] 响应状态码: {r.status_code}")
+        print(f"[调试] 响应数据: {data}")
+        
         if data.get('code') == 0 and data.get('data', {}).get('user_list'):
             user_info = data['data']['user_list'][0]
             if 'user_id' in user_info:
                 return user_info['user_id']
+        else:
+            print(f"[错误] 查找用户失败 - 错误码: {data.get('code')}, 错误信息: {data.get('msg')}")
     except Exception as e:
-        print(f"查找用户失败: {e}")
+        print(f"[异常] 查找用户失败: {e}")
     return None
 
 def find_owner_by_project(project_path, owners):
@@ -141,10 +148,19 @@ def send_card_message(user_id, project_name, user_name, commit_msg, commit_url, 
     headers = {"Authorization": "Bearer " + token, "Content-Type": "application/json"}
     
     try:
+        print(f"[调试] 发送卡片消息到用户: {user_id}")
         r = requests.post(url, json=body, headers=headers)
-        return r.json().get('code') == 0
+        result = r.json()
+        print(f"[调试] 发送响应状态码: {r.status_code}")
+        print(f"[调试] 发送响应数据: {result}")
+        
+        if result.get('code') == 0:
+            return True
+        else:
+            print(f"[错误] 发送失败 - 错误码: {result.get('code')}, 错误信息: {result.get('msg')}")
+            return False
     except Exception as e:
-        print(f"发送卡片消息失败: {e}")
+        print(f"[异常] 发送卡片消息失败: {e}")
         return False
 
 def send_message(user_id, text, token):
