@@ -188,22 +188,58 @@ def main():
     print(">>> 美术资源通知系统 v3.1 - 多人通知版")
     print("=" * 60)
     
-    # 从环境变量获取提交信息（使用 Base64 编码避免乱码）
-    import base64
+    # 检查是否使用文件模式
+    use_file_mode = os.environ.get('USE_FILE_MODE', 'false').lower() == 'true'
     
-    def get_env_base64(key, default=''):
-        """从 Base64 编码的环境变量获取值"""
-        b64_key = key + '_B64'
-        b64_value = os.environ.get(b64_key)
-        if b64_value:
-            try:
-                return base64.b64decode(b64_value).decode('utf-8')
-            except:
-                pass
-        return os.environ.get(key, default)
+    if use_file_mode:
+        print("[模式] 文件模式（UTF-8 编码）")
+        # 从文件读取中文信息
+        try:
+            print("[调试] 尝试读取 commit_msg.txt")
+            with open('commit_msg.txt', 'r', encoding='utf-8') as f:
+                commit_message = f.read().strip()
+            print(f"[调试] 读取成功: {commit_message}")
+        except Exception as e:
+            print(f"[调试] 读取失败: {e}")
+            commit_message = '未知提交'
+        
+        try:
+            print("[调试] 尝试读取 commit_user.txt")
+            with open('commit_user.txt', 'r', encoding='utf-8') as f:
+                user_name = f.read().strip()
+            print(f"[调试] 读取成功: {user_name}")
+        except Exception as e:
+            print(f"[调试] 读取失败: {e}")
+            user_name = '未知用户'
+    else:
+        print("[模式] Base64 模式")
+        # 从环境变量获取提交信息（使用 Base64 编码避免乱码）
+        import base64
+        
+        def get_env_base64(key, default=''):
+            """从 Base64 编码的环境变量获取值"""
+            b64_key = key + '_B64'
+            b64_value = os.environ.get(b64_key)
+            
+            print(f"[调试] 读取环境变量: {b64_key}")
+            print(f"[调试] Base64 值: {b64_value}")
+            
+            if b64_value:
+                try:
+                    decoded = base64.b64decode(b64_value).decode('utf-8')
+                    print(f"[调试] 解码后的值: {decoded}")
+                    return decoded
+                except Exception as e:
+                    print(f"[调试] Base64 解码失败: {e}")
+            
+            # 如果 Base64 失败，尝试直接读取
+            direct_value = os.environ.get(key, default)
+            print(f"[调试] 直接读取 {key}: {direct_value}")
+            return direct_value
+        
+        commit_message = get_env_base64('CI_COMMIT_MESSAGE', '未知提交')
+        user_name = get_env_base64('GITLAB_USER_NAME', '未知用户')
     
-    commit_message = get_env_base64('CI_COMMIT_MESSAGE', '未知提交')
-    user_name = get_env_base64('GITLAB_USER_NAME', '未知用户')
     project_path = os.environ.get('CI_PROJECT_PATH', '未知项目')
     commit_sha = os.environ.get('CI_COMMIT_SHA', '')
     commit_url = os.environ.get('CI_PROJECT_URL', '') + '/-/commit/' + commit_sha
