@@ -188,10 +188,21 @@ def main():
     print(">>> 美术资源通知系统 v3.1 - 多人通知版")
     print("=" * 60)
     
-    # 从环境变量获取提交信息
-    commit_message = os.environ.get('CI_COMMIT_MESSAGE', '未知提交')
-    user_name = os.environ.get('GITLAB_USER_NAME', '未知用户')
-    project_path = os.environ.get('CI_PROJECT_PATH', '未知项目')
+    # 从环境变量获取提交信息（Windows 环境需要处理编码）
+    def get_env_utf8(key, default=''):
+        """从环境变量获取 UTF-8 编码的值"""
+        value = os.environ.get(key, default)
+        if sys.platform == 'win32' and value:
+            try:
+                # 尝试将 GBK 错误解码的字符串重新编码为正确的 UTF-8
+                value = value.encode('latin1').decode('utf-8')
+            except:
+                pass
+        return value
+    
+    commit_message = get_env_utf8('CI_COMMIT_MESSAGE', '未知提交')
+    user_name = get_env_utf8('GITLAB_USER_NAME', '未知用户')
+    project_path = get_env_utf8('CI_PROJECT_PATH', '未知项目')
     commit_sha = os.environ.get('CI_COMMIT_SHA', '')
     commit_url = os.environ.get('CI_PROJECT_URL', '') + '/-/commit/' + commit_sha
     
