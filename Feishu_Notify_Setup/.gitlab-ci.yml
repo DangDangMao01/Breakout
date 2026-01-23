@@ -8,15 +8,20 @@ notify_art_update:
   variables:
     GIT_STRATEGY: none
     PYTHONIOENCODING: "utf-8"
+    FEISHU_APP_ID: "cli_a9e3400711fbdbcb"
+    FEISHU_APP_SECRET: "h61QXukkibdbO0wRRFxTkgppaLvcPQFS"
   script:
+    - '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8'
+    - '$OutputEncoding = [System.Text.Encoding]::UTF8'
     - Write-Host "=== 开始美术资源变动检测 ==="
     - Set-Location C:\GitLab-Runner
     - $env:CI_PROJECT_PATH = "GroupTwoGame/groupTowArt_Hb"
-    - $env:CI_COMMIT_MESSAGE = if ($env:CI_COMMIT_MESSAGE) { $env:CI_COMMIT_MESSAGE } else { "手动提交" }
-    - $env:GITLAB_USER_NAME = if ($env:GITLAB_USER_NAME) { $env:GITLAB_USER_NAME } else { "未知用户" }
+    - $env:CI_COMMIT_MESSAGE_B64 = if ($env:CI_COMMIT_MESSAGE) { [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($env:CI_COMMIT_MESSAGE)) } else { [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("手动提交")) }
+    - $env:GITLAB_USER_NAME_B64 = if ($env:GITLAB_USER_NAME) { [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($env:GITLAB_USER_NAME)) } else { [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("未知用户")) }
     - $env:CI_COMMIT_SHA = if ($env:CI_COMMIT_SHA) { $env:CI_COMMIT_SHA } else { "unknown" }
     - $env:CI_PROJECT_URL = if ($env:CI_PROJECT_URL) { $env:CI_PROJECT_URL } else { "https://gitlab.com" }
-    - Get-ChildItem env: | Where-Object { $_.Name -like "*FEISHU*" } | ForEach-Object { Write-Host "$($_.Name) = $($_.Value)" }
+    - $env:FEISHU_APP_ID = "cli_a9e3400711fbdbcb"
+    - $env:FEISHU_APP_SECRET = "h61QXukkibdbO0wRRFxTkgppaLvcPQFS"
     - '& "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\python.exe" notify.py'
   only:
     changes:
