@@ -1,0 +1,13 @@
+{
+    "_comment": "美术资源负责人配置文件 v3.1",
+    "_说明": "支持单人或多人通知",
+    "_格式": "项目名称: 单个邮箱 或 [邮箱1, 邮箱2, ...]",
+    
+    "Y_遇水发财": ["zhaolida@huixuanjiasu.com"],
+    "C_财运接龙": [
+        "wangxinlai@huixuanjiasu.com",
+        "zhaolida@huixuanjiasu.com"
+    ],
+    "groupTowArt_Hb": ["wangxinlai@huixuanjiasu.com"],
+    "测试文件": ["wangxinlai@huixuanjiasu.com"]
+}
