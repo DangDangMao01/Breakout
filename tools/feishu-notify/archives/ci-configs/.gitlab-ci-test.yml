@@ -1,0 +1,17 @@
+# 美术资源通知系统 v3.0 - 测试阶段配置
+# 复制这段配置到公司工程的 .gitlab-ci.yml
+
+stages:
+  - notify
+
+notify_art_update:
+  stage: notify
+  script:
+    - python notify.py
+  variables:
+    GIT_STRATEGY: none                             # 不拉取代码，提高速度
+    TEST_MODE: "true"                              # 🧪 测试模式：启用
+    TEST_EMAIL: "wangxinlai@huixuanjiasu.com"      # 📧 测试邮箱：你的邮箱
+  only:
+    - main                                         # 仅在 main 分支触发
+  when: always                                     # 无论前面任务成功与否都执行

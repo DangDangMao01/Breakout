@@ -1,0 +1,23 @@
+stages:
+  - notify
+
+notify_art_update:
+  stage: notify
+  tags:
+    - windows
+  variables:
+    PYTHONIOENCODING: "utf-8"
+  script:
+    - Write-Host "=== 开始美术资源变动检测 ==="
+    - $currentDir = Get-Location
+    - Write-Host "当前目录:" $currentDir
+    - Write-Host "项目路径:" $env:CI_PROJECT_PATH
+    - Write-Host "提交信息:" $env:CI_COMMIT_MESSAGE
+    - Write-Host "提交人:" $env:GITLAB_USER_NAME
+    - Write-Host "运行通知脚本..."
+    - C:\Users\Administrator\AppData\Local\Programs\Python\Python314\python.exe D:\HuiXuanJiaSu\I_IAA_Work\notify.py
+  only:
+    changes:
+      - "**/*"
+  allow_failure: true
+  retry: 1

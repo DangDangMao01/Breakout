@@ -1,0 +1,16 @@
+# 美术资源通知系统 v3.0 - 正式上线配置
+# 测试通过后，用这段配置替换 .gitlab-ci.yml 中的通知任务
+
+stages:
+  - notify
+
+notify_art_update:
+  stage: notify
+  script:
+    - python notify.py
+  variables:
+    GIT_STRATEGY: none                             # 不拉取代码，提高速度
+    TEST_MODE: "false"                             # ✅ 测试模式：关闭
+  only:
+    - main                                         # 仅在 main 分支触发
+  when: always                                     # 无论前面任务成功与否都执行

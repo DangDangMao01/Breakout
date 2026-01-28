@@ -1,0 +1,17 @@
+{
+    "_comment": "美术资源负责人配置文件",
+    "_说明": "支持三种匹配方式：1.精确匹配 2.包含匹配 3.模糊匹配",
+    
+    "DangDangMao01": "zhaolida@huixuanjiasu.com",
+    "Y_遇水发财": "zhaolida@huixuanjiasu.com",
+    "遇水发财": "zhaolida@huixuanjiasu.com",
+    
+    "WangXinlai": "wangxinlai@huixuanjiasu.com",
+    "测试文件": "wangxinlai@huixuanjiasu.com",
+    
+    "N_奶奶的小农院": "lisi@example.com",
+    "T_天才连一连": "wangwu@example.com",
+    
+    "_新增人员示例": "只需添加一行",
+    "新同事GitLab用户名": "new_email@huixuanjiasu.com"
+}
