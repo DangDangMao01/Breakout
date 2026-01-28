@@ -4,6 +4,6 @@ inclusion: always
 
 # KB Link
 
-Central KB: `E:\Git_file\Kiro-Central-KB`
+Central KB: `D:\G_GitHub\Kiro-Central-KB`
 
 Search KB before answering technical questions.
