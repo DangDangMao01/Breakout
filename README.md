@@ -17,10 +17,16 @@
 
 | 目录 | 说明 |
 |------|------|
-| `incubator/` |  项目孵化器 |
-| `archives/` |  已独立项目归档 |
-| `assets/` |  资源文件 |
-| `tu/` |  截图文件夹（供 Kiro 查看） |
+| `projects/` | 正式项目（Cocos_2D, Spine, SecondMind-Product） |
+| `scripts/` | 脚本工具库（3dsmax, blender, photoshop, spine, windows） |
+| `research/` | 研究与探索（ai-philosophy, plugin-design, comfyui, agent, experiments） |
+| `art/` | 美术资源（style-bible, assets） |
+| `knowledge-base/` | 知识库 |
+| `docs/` | 文档 |
+| `archives/` | 归档（old-tests, deprecated） |
+| `temp/` | 临时文件（screenshots） |
+| `tools/` | 工具 |
+| `tu/` | 截图文件夹（供 Kiro 查看） |
 
 ## 关联
 
