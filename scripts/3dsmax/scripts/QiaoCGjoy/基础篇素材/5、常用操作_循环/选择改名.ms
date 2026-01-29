@@ -1,1 +1,0 @@
-for i in selection do i.name += "new"
