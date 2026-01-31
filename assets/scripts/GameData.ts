@@ -10,6 +10,10 @@ export const GameEvents = {
     UPDATE_UI: 'update-ui'
 };
 
+export const StorageKeys = {
+    HIGH_SCORE: 'breakout-high-score'
+};
+
 export const PhysicsGroups = {
     DEFAULT: 1 << 0,
     BALL: 1 << 1,

@@ -1,6 +1,6 @@
 
-import { _decorator, Component, Node, Label, Prefab, instantiate, director, Layout } from 'cc';
-import { GameEvents, GameStatus } from './GameData';
+import { _decorator, Component, Node, Label, Prefab, instantiate, director, Layout, sys } from 'cc';
+import { GameEvents, GameStatus, StorageKeys } from './GameData';
 
 const { ccclass, property } = _decorator;
 
@@ -28,11 +28,18 @@ export class GameManager extends Component {
     gameWinMenu: Node = null!;
 
     private score: number = 0;
+    private highScore: number = 0;
     private lives: number = 3;
     private totalBricks: number = 0;
     private currentBricks: number = 0;
 
     start() {
+        // Load High Score
+        const savedData = sys.localStorage.getItem(StorageKeys.HIGH_SCORE);
+        if (savedData) {
+            this.highScore = parseInt(savedData);
+        }
+
         director.on(GameEvents.ADD_SCORE, this.onAddScore, this);
         director.on(GameEvents.PLAYER_HIT, this.onPlayerHit, this);
         
@@ -88,6 +95,13 @@ export class GameManager extends Component {
 
     onAddScore(score: number) {
         this.score += score;
+        
+        // Check High Score
+        if (this.score > this.highScore) {
+            this.highScore = this.score;
+            sys.localStorage.setItem(StorageKeys.HIGH_SCORE, this.highScore.toString());
+        }
+
         this.currentBricks--;
         this.updateUI();
 
@@ -106,7 +120,7 @@ export class GameManager extends Component {
     }
 
     updateUI() {
-        if (this.scoreLabel) this.scoreLabel.string = `Score: ${this.score}`;
+        if (this.scoreLabel) this.scoreLabel.string = `Score: ${this.score}  Best: ${this.highScore}`;
         if (this.livesLabel) this.livesLabel.string = `Lives: ${this.lives}`;
     }
 
