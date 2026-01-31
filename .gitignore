@@ -57,3 +57,29 @@ htmlcov/
 # Config (if contains sensitive data)
 # config/secrets.json
 # config/local.json
+
+# Cocos Creator projects
+# 排除 Cocos Creator 的大文件，只保留源代码
+**/library/
+**/local/
+**/temp/
+**/build/
+**/jsb-link/
+**/jsb-default/
+**/native/
+**/.DS_Store
+**/Thumbs.db
+
+# Cocos Creator 配置文件（可选择性保留）
+# 保留项目配置，排除本地配置
+**/settings/local-*.json
+
+# 资源的导入配置（meta 文件保留，用于版本控制）
+# *.meta 文件需要保留
+
+# 大型资源文件（可选）
+# 如果资源文件太大，可以排除
+# **/*.png
+# **/*.jpg
+# **/*.mp3
+# **/*.mp4
