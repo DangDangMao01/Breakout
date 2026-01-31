@@ -15,7 +15,7 @@ node_modules/
 
 # Trae IDE Memory
 # Uncomment the line below if you WANT to sync AI memory across devices (Not Recommended for public repos)
-# !.trae/
+!.trae/
 
 #//////////////////////////
 # VSCode
